@@ -192,6 +192,10 @@ const ReplySection = styled.div`
   display: flex;
   align-items: start;
   gap: 1rem;
+
+  @media screen and (max-width: 640px) {
+    flex-direction: column;
+  }
 `;
 
 const Divider = styled.div`

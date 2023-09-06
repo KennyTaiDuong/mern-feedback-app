@@ -38,7 +38,7 @@ const StyledHeading = styled(Heading)`
 `;
 
 const CardSection = styled.section`
-  padding: 1.5rem 1.5rem;
+  padding: 1.5rem 0;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
@@ -66,7 +66,7 @@ const StyledDescription = styled(Description)`
 `;
 
 const RoadmapColumn = ({ currentTab }) => {
-  const { feedbackArray } = useContext(GlobalContext);
+  const { allFeedback } = useContext(GlobalContext);
   const navigate = useNavigate();
 
   function filterByStatus(obj) {
@@ -77,7 +77,7 @@ const RoadmapColumn = ({ currentTab }) => {
     navigate(`/${id}`);
   }
 
-  const ContentContainerElements = feedbackArray
+  const ContentContainerElements = allFeedback
     .filter(filterByStatus)
     .map((feedback) => {
       const { title, category, comments, description, upvotes, _id, id } =

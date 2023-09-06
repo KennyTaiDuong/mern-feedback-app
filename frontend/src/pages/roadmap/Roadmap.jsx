@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useState, useContext } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
@@ -31,6 +31,10 @@ const Header = styled.header`
 
   @media screen and (min-width: 690px) {
     border-radius: 0.625rem;
+  }
+
+  @media screen and (min-width: 1024px) {
+    min-width: 64.375rem;
   }
 `;
 
@@ -85,6 +89,8 @@ const StatusTab = styled.button`
 `;
 
 const BigScreenContainer = styled.div`
+  display: none;
+
   @media screen and (min-width: 690px) {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;

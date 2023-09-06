@@ -9,9 +9,12 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   padding: 1.5rem;
+  background-color: var(--neutral-100);
+  border-radius: 10px;
 
   @media screen and (min-width: 640px) {
     padding: 6.875rem;
+    margin-top: 1.5rem;
   }
 `;
 

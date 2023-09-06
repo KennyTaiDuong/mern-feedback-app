@@ -164,7 +164,7 @@ const NewFeedback = () => {
       body: JSON.stringify({
         title: document.getElementById("title").value,
         description: document.getElementById("desc").value,
-        category: selectedCategory,
+        category: selectedCategory.toLowerCase(),
         upvotes: 0,
         upvoted: false,
         status: "suggestion",

@@ -49,7 +49,6 @@ const FeedbackContainer = styled(ContentContainer)`
   @media screen and (min-width: 640px) {
     display: flex;
     gap: 2.5rem;
-    justify-content: space-between;
   }
 `;
 
@@ -58,7 +57,7 @@ const StyledNavLink = styled(NavLink)`
     order: 1;
     width: 100%;
     display: flex;
-    gap: 1.5rem;
+    justify-content: space-between;
   }
 `;
 
@@ -99,7 +98,6 @@ export const ButtonContainer = styled.div`
   padding-top: 1rem;
 
   @media screen and (min-width: 640px) {
-    margin-left: auto;
   }
 `;
 

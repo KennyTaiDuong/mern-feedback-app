@@ -19,6 +19,7 @@ export const GlobalContext = createContext();
 
 function App() {
   const [feedbackArray, setFeedbackArray] = useState([]);
+  const [allFeedback, setAllFeedback] = useState([]);
   const [plannedArray, setPlannedArray] = useState([]);
   const [progressArray, setProgressArray] = useState([]);
   const [liveArrary, setLiveArray] = useState([]);
@@ -36,6 +37,12 @@ function App() {
       }
 
       const data = await response.json();
+
+      setAllFeedback(
+        data.sort((a, b) => {
+          return b.upvotes - a.upvotes;
+        })
+      );
 
       if (filter === "All") {
         setFeedbackArray(
@@ -76,32 +83,35 @@ function App() {
       }
     }
 
+    fetchFeedbacks();
+  }, [refreshCount]);
+
+  useEffect(() => {
     function setArrays() {
       setPlannedArray(
-        feedbackArray.filter((obj) => {
+        allFeedback.filter((obj) => {
           return obj.status === "planned";
         })
       );
       setProgressArray(
-        feedbackArray.filter((obj) => {
+        allFeedback.filter((obj) => {
           return obj.status === "in-progress";
         })
       );
       setLiveArray(
-        feedbackArray.filter((obj) => {
+        allFeedback.filter((obj) => {
           return obj.status === "live";
         })
       );
       setSuggestionArray(
-        feedbackArray.filter((obj) => {
+        allFeedback.filter((obj) => {
           return obj.status === "suggestion";
         })
       );
     }
 
-    fetchFeedbacks();
     setArrays();
-  }, [refreshCount]);
+  }, [feedbackArray, refreshCount]);
 
   return (
     <BrowserRouter>
@@ -110,6 +120,7 @@ function App() {
         value={{
           feedbackArray,
           setFeedbackArray,
+          allFeedback,
           sort,
           setSort,
           plannedArray,
