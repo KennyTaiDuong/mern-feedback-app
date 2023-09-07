@@ -3,7 +3,6 @@ require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const serverless = require("serverless-http");
 const bodyParser = require("body-parser");
 const feedbackRoutes = require("./routes/feedbacks");
 
@@ -41,8 +40,6 @@ app.use(cors(corsOptions));
 
 // routes
 app.use("/api/feedback", feedbackRoutes);
-
-const handler = serverless(app, { provider: "aws" });
 
 exports.handler = async (event, context) => {
   return await handler(event, context);
