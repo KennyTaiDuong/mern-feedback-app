@@ -154,7 +154,9 @@ const EditFeedback = () => {
 
   useEffect(() => {
     async function fetchDetail() {
-      const response = await fetch(`http://localhost:4000/api/feedback/${id}`);
+      const response = await fetch(
+        `http://http://3.135.141.179:27017/api/feedback/${id}`
+      );
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -214,7 +216,7 @@ const EditFeedback = () => {
   }
 
   async function updateFeedback() {
-    const res = await fetch(`http://localhost:4000/api/feedback/${id}`, {
+    const res = await fetch(`http://3.135.141.179:27017/api/feedback/${id}`, {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
@@ -233,7 +235,7 @@ const EditFeedback = () => {
   }
 
   async function deleteFeedback() {
-    const res = await fetch(`http://localhost:4000/api/feedback/${_id}`, {
+    const res = await fetch(`http://3.135.141.179:27017/api/feedback/${_id}`, {
       method: "DELETE",
     });
 

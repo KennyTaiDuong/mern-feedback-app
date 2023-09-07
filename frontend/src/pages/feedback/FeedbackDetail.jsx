@@ -235,7 +235,9 @@ const FeedbackDetail = () => {
 
   useEffect(() => {
     async function fetchDetail() {
-      const response = await fetch(`http://localhost:4000/api/feedback/${id}`);
+      const response = await fetch(
+        `http://3.135.141.179:27017/api/feedback/${id}`
+      );
 
       if (response.ok) {
         const feedback = await response.json();
@@ -279,18 +281,21 @@ const FeedbackDetail = () => {
 
   async function handleUpvote() {
     if (!upvoted) {
-      const res = await fetch(`http://localhost:4000/api/feedback/${_id}`, {
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        method: "PATCH",
+      const res = await fetch(
+        `http://3.135.141.179:27017/api/feedback/${_id}`,
+        {
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          method: "PATCH",
 
-        body: JSON.stringify({
-          upvotes: `${upvotes + 1}`,
-          upvoted: true,
-        }),
-      });
+          body: JSON.stringify({
+            upvotes: `${upvotes + 1}`,
+            upvoted: true,
+          }),
+        }
+      );
 
       if (!res.ok) {
         throw new Error(`HTTP error! status: ${res.status}`);
@@ -298,18 +303,21 @@ const FeedbackDetail = () => {
     }
 
     if (upvoted) {
-      const res = await fetch(`http://localhost:4000/api/feedback/${_id}`, {
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        method: "PATCH",
+      const res = await fetch(
+        `http://3.135.141.179:27017/api/feedback/${_id}`,
+        {
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          method: "PATCH",
 
-        body: JSON.stringify({
-          upvotes: `${upvotes - 1}`,
-          upvoted: false,
-        }),
-      });
+          body: JSON.stringify({
+            upvotes: `${upvotes - 1}`,
+            upvoted: false,
+          }),
+        }
+      );
 
       if (!res.ok) {
         throw new Error(`HTTP error! status: ${res.status}`);
@@ -331,7 +339,7 @@ const FeedbackDetail = () => {
       replies: [],
     });
 
-    const res = await fetch(`http://localhost:4000/api/feedback/${_id}`, {
+    const res = await fetch(`http://3.135.141.179:27017/api/feedback/${_id}`, {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
@@ -363,7 +371,7 @@ const FeedbackDetail = () => {
     };
 
     // PATCH request to update reply array
-    const res = await fetch(`http://localhost:4000/api/feedback/${_id}`, {
+    const res = await fetch(`http://3.135.141.179:27017/api/feedback/${_id}`, {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",

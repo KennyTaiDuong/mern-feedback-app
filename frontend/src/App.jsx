@@ -30,7 +30,7 @@ function App() {
 
   useEffect(() => {
     async function fetchFeedbacks() {
-      const response = await fetch("http://localhost:4000/api/feedback/");
+      const response = await fetch("http://3.135.141.179:27017/api/feedback");
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);

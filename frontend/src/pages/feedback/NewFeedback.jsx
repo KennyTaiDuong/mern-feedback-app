@@ -155,7 +155,7 @@ const NewFeedback = () => {
   }
 
   async function handleAddBtn() {
-    const res = await fetch(`http://localhost:4000/api/feedback/`, {
+    const res = await fetch(`http://3.135.141.179:27017/api/feedback/`, {
       headers: {
         "Content-Type": "application/json",
       },

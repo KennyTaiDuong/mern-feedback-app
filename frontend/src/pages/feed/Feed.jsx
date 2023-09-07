@@ -176,18 +176,21 @@ const Feed = () => {
 
     async function handleUpvote() {
       if (!upvoted) {
-        const res = await fetch(`http://localhost:4000/api/feedback/${_id}`, {
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          method: "PATCH",
+        const res = await fetch(
+          `http://3.135.141.179:27017/api/feedback/${_id}`,
+          {
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+            method: "PATCH",
 
-          body: JSON.stringify({
-            upvotes: `${upvotes + 1}`,
-            upvoted: true,
-          }),
-        });
+            body: JSON.stringify({
+              upvotes: `${upvotes + 1}`,
+              upvoted: true,
+            }),
+          }
+        );
 
         if (!res.ok) {
           throw new Error(`HTTP error! status: ${res.status}`);
@@ -195,18 +198,21 @@ const Feed = () => {
       }
 
       if (upvoted) {
-        const res = await fetch(`http://localhost:4000/api/feedback/${_id}`, {
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          method: "PATCH",
+        const res = await fetch(
+          `http://3.135.141.179:27017/api/feedback/${_id}`,
+          {
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+            method: "PATCH",
 
-          body: JSON.stringify({
-            upvotes: `${upvotes - 1}`,
-            upvoted: false,
-          }),
-        });
+            body: JSON.stringify({
+              upvotes: `${upvotes - 1}`,
+              upvoted: false,
+            }),
+          }
+        );
 
         if (!res.ok) {
           throw new Error(`HTTP error! status: ${res.status}`);
