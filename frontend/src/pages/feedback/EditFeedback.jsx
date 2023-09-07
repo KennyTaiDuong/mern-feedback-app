@@ -300,9 +300,7 @@ const EditFeedback = () => {
             <StyledDropDown>
               <Item onClick={(e) => updateFeedbackCategory(e)}>
                 Feature
-                {(selectedCategory === "Feature" || category === "feature") && (
-                  <img src={CheckIcon} />
-                )}
+                {selectedCategory === "Feature" && <img src={CheckIcon} />}
               </Item>
               <Divider />
               <Item onClick={(e) => updateFeedbackCategory(e)}>
@@ -314,22 +312,17 @@ const EditFeedback = () => {
               <Divider />
               <Item onClick={(e) => updateFeedbackCategory(e)}>
                 UX
-                {(selectedCategory === "UX" || category === "UX") && (
-                  <img src={CheckIcon} />
-                )}
+                {selectedCategory === "UX" && <img src={CheckIcon} />}
               </Item>
               <Divider />
               <Item onClick={(e) => updateFeedbackCategory(e)}>
                 Enhancement
-                {(selectedCategory === "Enhancement" ||
-                  category === "enhancement") && <img src={CheckIcon} />}
+                {selectedCategory === "Enhancement" && <img src={CheckIcon} />}
               </Item>
               <Divider />
               <Item onClick={(e) => updateFeedbackCategory(e)}>
                 Bug
-                {(selectedCategory === "Bug" || category === "bug") && (
-                  <img src={CheckIcon} />
-                )}
+                {selectedCategory === "Bug" && <img src={CheckIcon} />}
               </Item>
             </StyledDropDown>
           )}
@@ -354,28 +347,22 @@ const EditFeedback = () => {
             <StyledDropDown>
               <Item onClick={(e) => updateFeedbackStatus(e)}>
                 Suggestion
-                {(selectedStatus === "Suggestion" ||
-                  status === "suggestion") && <img src={CheckIcon} />}
+                {selectedStatus === "Suggestion" && <img src={CheckIcon} />}
               </Item>
               <Divider />
               <Item onClick={(e) => updateFeedbackStatus(e)}>
                 Planned
-                {(selectedStatus === "Planned" || status === "planned") && (
-                  <img src={CheckIcon} />
-                )}
+                {selectedStatus === "Planned" && <img src={CheckIcon} />}
               </Item>
               <Divider />
               <Item onClick={(e) => updateFeedbackStatus(e)}>
                 In-Progress
-                {(selectedStatus === "In-Progress" ||
-                  status === "in-progress") && <img src={CheckIcon} />}
+                {selectedStatus === "In-Progress" && <img src={CheckIcon} />}
               </Item>
               <Divider />
               <Item onClick={(e) => updateFeedbackStatus(e)}>
                 Live
-                {(selectedStatus === "Live" || status === "live") && (
-                  <img src={CheckIcon} />
-                )}
+                {selectedStatus === "Live" && <img src={CheckIcon} />}
               </Item>
             </StyledDropDown>
           )}
