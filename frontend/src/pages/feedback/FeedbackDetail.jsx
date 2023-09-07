@@ -233,6 +233,7 @@ const FeedbackDetail = () => {
     filter: "brightness(1000%)",
   };
 
+  // initial fetch of specific feedback
   useEffect(() => {
     async function fetchDetail() {
       const response = await fetch(
@@ -441,7 +442,7 @@ const FeedbackDetail = () => {
           return (
             <CommentContainer key={`reply-${index}`}>
               <ProfileInfoContainer>
-                <ProfilePic src={`src/${user.image}`} />
+                <ProfilePic src={`${user.image}`} />
                 <ProfileName>
                   <Name>{user.name}</Name>
                   <Username>@{user.username}</Username>
@@ -482,7 +483,7 @@ const FeedbackDetail = () => {
         <div key={`comment-${id}`}>
           <CommentContainer>
             <ProfileInfoContainer>
-              <ProfilePic src={`src/${user.image}`} />
+              <ProfilePic src={`${user.image}`} />
               <ProfileName>
                 <Name>{user.name}</Name>
                 <Username>@{user.username}</Username>

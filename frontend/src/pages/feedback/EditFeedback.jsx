@@ -141,9 +141,9 @@ const Divider = styled.div`
 
 const EditFeedback = () => {
   const [feedback, setFeedback] = useState({});
+  const [newFeedback, setNewFeedback] = useState({});
   const [categoryOpen, setCategoryOpen] = useState(false);
   const [statusOpen, setStatusOpen] = useState(false);
-  const [newFeedback, setNewFeedback] = useState({});
   const { setRefreshCount } = useContext(GlobalContext);
   const { id } = useParams();
   const navigate = useNavigate();
@@ -155,7 +155,7 @@ const EditFeedback = () => {
   useEffect(() => {
     async function fetchDetail() {
       const response = await fetch(
-        `http://http://3.135.141.179:27017/api/feedback/${id}`
+        `http://3.135.141.179:27017/api/feedback/${id}`
       );
 
       if (!response.ok) {
@@ -215,6 +215,7 @@ const EditFeedback = () => {
     });
   }
 
+  // patch request to update database
   async function updateFeedback() {
     const res = await fetch(`http://3.135.141.179:27017/api/feedback/${id}`, {
       headers: {
