@@ -194,7 +194,7 @@ const EditFeedback = () => {
 
     setNewFeedback({
       ...newFeedback,
-      category: e.target.outerText,
+      category: e.target.outerText.toLowerCase(),
     });
   }
 
@@ -204,7 +204,7 @@ const EditFeedback = () => {
 
     setNewFeedback({
       ...newFeedback,
-      status: e.target.outerText,
+      status: e.target.outerText.toLowerCase(),
     });
   }
 

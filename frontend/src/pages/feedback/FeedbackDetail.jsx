@@ -240,14 +240,13 @@ const FeedbackDetail = () => {
         `http://3.135.141.179:27017/api/feedback/${id}`
       );
 
-      if (response.ok) {
-        const feedback = await response.json();
-        setFeedback(feedback);
-        return;
+      if (!response.ok) {
+        navigate("/");
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      navigate("*");
-      throw new Error(`HTTP error! status: ${response.status}`);
+      const feedback = await response.json();
+      setFeedback(feedback);
     }
 
     fetchDetail();
@@ -442,7 +441,7 @@ const FeedbackDetail = () => {
           return (
             <CommentContainer key={`reply-${index}`}>
               <ProfileInfoContainer>
-                <ProfilePic src={`${user.image}`} />
+                <ProfilePic src={`src/${user.image}`} />
                 <ProfileName>
                   <Name>{user.name}</Name>
                   <Username>@{user.username}</Username>
@@ -483,7 +482,7 @@ const FeedbackDetail = () => {
         <div key={`comment-${id}`}>
           <CommentContainer>
             <ProfileInfoContainer>
-              <ProfilePic src={`${user.image}`} />
+              <ProfilePic src={`src/${user.image}`} />
               <ProfileName>
                 <Name>{user.name}</Name>
                 <Username>@{user.username}</Username>

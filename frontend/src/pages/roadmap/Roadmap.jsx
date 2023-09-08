@@ -107,8 +107,7 @@ const MobileContainer = styled.div`
 const ColumnContainer = styled.div``;
 
 const Roadmap = () => {
-  const { feedbackArray, plannedArray, progressArray, liveArrary } =
-    useContext(GlobalContext);
+  const { plannedArray, progressArray, liveArrary } = useContext(GlobalContext);
   const [currentTab, setCurrentTab] = useState(
     `Planned (${plannedArray.length})`
   );
