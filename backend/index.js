@@ -40,7 +40,3 @@ app.use(cors(corsOptions));
 
 // routes
 app.use("/api/feedback", feedbackRoutes);
-
-exports.handler = async (event, context) => {
-  return await handler(event, context);
-};
