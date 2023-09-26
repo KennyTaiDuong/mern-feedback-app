@@ -3,15 +3,15 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
 import { AddButton, ContentContainer } from "../../globalStyles";
-import { Description, Title } from "../feed/Feed";
-import { Heading } from "./FeedbackDetail";
+import { Description, Title } from "../feed/Feed/Feed";
+import { Heading } from "./FeedbackDetail/FeedbackDetail";
 
 import LeftArrow from "../../assets/shared/icon-arrow-left.svg";
 import DownArrow from "../../assets/shared/icon-arrow-down.svg";
 import UpArrow from "../../assets/shared/icon-arrow-up.svg";
 import CheckIcon from "../../assets/shared/icon-check.svg";
 import NewFeedbackIcon from "../../assets/shared/icon-new-feedback.svg";
-import { GlobalContext } from "../../App";
+import { GlobalContext } from "../../App/App";
 
 const Container = styled.div`
   display: flex;
@@ -151,7 +151,7 @@ const NewFeedback = () => {
   }
 
   function handleCategoryChange(e) {
-    setSelectedCategory(e.target.outerText);
+    setSelectedCategory(e.target.textContent);
   }
 
   async function handleAddBtn() {

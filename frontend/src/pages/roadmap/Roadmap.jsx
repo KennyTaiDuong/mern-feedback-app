@@ -4,10 +4,10 @@ import { useNavigate } from "react-router-dom";
 
 import LeftArrow from "../../assets/shared/icon-arrow-left.svg";
 
-import { GlobalContext } from "../../App";
+import { GlobalContext } from "../../App/App";
 import { AddButton } from "../../globalStyles";
-import { Heading } from "../feedback/FeedbackDetail";
-import RoadmapColumn from "./RoadmapColumn";
+import { Heading } from "../feedback/FeedbackDetail/FeedbackDetail";
+import RoadmapColumn from "../../components/roadmap/RoadmapColumn";
 
 const Container = styled.div`
   display: flex;
@@ -60,7 +60,7 @@ const StyledIcon = styled.img`
   filter: brightness(1000%);
 `;
 
-const WhiteHeading = styled(Heading)`
+const WhiteHeading = styled((props) => <Heading {...props} />)`
   color: var(--neutral-100);
   padding: 0;
 `;
@@ -104,10 +104,8 @@ const MobileContainer = styled.div`
   }
 `;
 
-const ColumnContainer = styled.div``;
-
 const Roadmap = () => {
-  const { plannedArray, progressArray, liveArrary } = useContext(GlobalContext);
+  const { plannedArray, progressArray, liveArray } = useContext(GlobalContext);
   const [currentTab, setCurrentTab] = useState(
     `Planned (${plannedArray.length})`
   );
@@ -126,7 +124,7 @@ const Roadmap = () => {
   };
 
   function handleTabChange(e) {
-    setCurrentTab(e.target.outerText);
+    setCurrentTab(e.target.textContent);
   }
 
   function goBack() {
@@ -170,27 +168,27 @@ const Roadmap = () => {
           onClick={(e) => handleTabChange(e)}
           style={currentTab.split(" ")[0] == "Live" ? activeTab : null}
         >
-          Live ({liveArrary.length})
+          Live ({liveArray.length})
         </StatusTab>
       </Navbar>
 
       {/* Feedback Cards */}
       <MobileContainer>
-        <ColumnContainer>
+        <div>
           <RoadmapColumn currentTab={currentTab} />
-        </ColumnContainer>
+        </div>
       </MobileContainer>
 
       <BigScreenContainer>
-        <ColumnContainer>
+        <div>
           <RoadmapColumn currentTab={"Planned"} />
-        </ColumnContainer>
-        <ColumnContainer>
+        </div>
+        <div>
           <RoadmapColumn currentTab={"In-Progress"} />
-        </ColumnContainer>
-        <ColumnContainer>
+        </div>
+        <div>
           <RoadmapColumn currentTab={"Live"} />
-        </ColumnContainer>
+        </div>
       </BigScreenContainer>
     </Container>
   );

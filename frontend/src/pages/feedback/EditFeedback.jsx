@@ -9,9 +9,9 @@ import EditLogo from "../../assets/shared/icon-edit-feedback.svg";
 import CheckIcon from "../../assets/shared/icon-check.svg";
 
 import { AddButton, ContentContainer } from "../../globalStyles";
-import { Heading } from "./FeedbackDetail";
-import { Description, Title } from "../feed/Feed";
-import { GlobalContext } from "../../App";
+import { Heading } from "./FeedbackDetail/FeedbackDetail";
+import { Description, Title } from "../feed/Feed/Feed";
+import { GlobalContext } from "../../App/App";
 
 const Container = styled.div`
   display: flex;
@@ -189,22 +189,22 @@ const EditFeedback = () => {
   }
 
   function updateFeedbackCategory(e) {
-    setSelectedCategory(e.target.outerText);
+    setSelectedCategory(e.target.textContent);
     setCategoryOpen(false);
 
     setNewFeedback({
       ...newFeedback,
-      category: e.target.outerText.toLowerCase(),
+      category: e.target.textContent.toLowerCase(),
     });
   }
 
   function updateFeedbackStatus(e) {
-    setSelectedStatus(e.target.outerText);
+    setSelectedStatus(e.target.textContent);
     setStatusOpen(false);
 
     setNewFeedback({
       ...newFeedback,
-      status: e.target.outerText.toLowerCase(),
+      status: e.target.textContent.toLowerCase(),
     });
   }
 
