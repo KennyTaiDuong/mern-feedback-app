@@ -40,14 +40,14 @@ const ButtonContainer = styled.div`
 `;
 
 const FeedbackContainer = styled(ContentContainer)`
-  @media screen and (min-width: 640px) {
+  @media screen and (min-width: 690px) {
     display: flex;
     gap: 2.5rem;
   }
 `;
 
 const TextContainer = styled.div`
-  @media screen and (min-width: 640px) {
+  @media screen and (min-width: 690px) {
     display: flex;
     justify-content: space-between;
     order: 2;
@@ -82,7 +82,7 @@ const EditButton = styled(NavLink)`
   border-radius: 0.625rem;
   text-decoration: 0;
 
-  @media screen and (min-width: 640px) {
+  @media screen and (min-width: 690px) {
     padding: 0.75rem 1.5rem;
   }
 `;
@@ -110,7 +110,7 @@ const CommentBox = styled.textarea`
 `;
 
 const ReplyBox = styled(CommentBox)`
-  @media screen and (min-width: 640px) {
+  @media screen and (min-width: 690px) {
     margin-left: 4.5rem;
     margin-bottom: 0;
   }
@@ -122,7 +122,7 @@ const CharacterCount = styled.p`
 `;
 
 const CommentsSection = styled(ContentContainer)`
-  @media screen and (min-width: 640px) {
+  @media screen and (min-width: 690px) {
     padding: 2rem;
   }
 `;
@@ -142,7 +142,7 @@ const ProfileInfoContainer = styled.div`
 const ProfileName = styled.div`
   margin-left: 1rem;
 
-  @media screen and (min-width: 640px) {
+  @media screen and (min-width: 690px) {
     margin-left: 2rem;
   }
 `;
@@ -167,7 +167,7 @@ const ProfilePic = styled.img`
 `;
 
 const CommentDescription = styled((props) => <Description {...props} />)`
-  @media screen and (min-width: 640px) {
+  @media screen and (min-width: 690px) {
     padding-left: 4.5rem;
   }
 `;
@@ -185,7 +185,7 @@ const ReplySection = styled.div`
   align-items: start;
   gap: 1rem;
 
-  @media screen and (max-width: 640px) {
+  @media screen and (max-width: 690px) {
     flex-direction: column;
   }
 `;
@@ -208,6 +208,7 @@ const FeedbackDetail = () => {
   const [newComment, setNewComment] = useState("");
   const [newReply, setNewReply] = useState("");
   const [replyTarget, setReplyTarget] = useState("");
+  const [replyTargetId, setReplyTargetId] = useState("");
   const { refreshCount, setRefreshCount } = useContext(GlobalContext);
   const { id } = useParams();
   const navigate = useNavigate();
@@ -235,17 +236,17 @@ const FeedbackDetail = () => {
   // initial fetch of specific feedback
   useEffect(() => {
     async function fetchDetail() {
-      const response = await fetch(
-        `http://3.135.141.179:27017/api/feedback/${id}`
-      );
+      try {
+        const response = await fetch(
+          `http://3.135.141.179:27017/api/feedback/${id}`
+        );
 
-      if (!response.ok) {
+        const feedback = await response.json();
+        setFeedback(feedback);
+      } catch (error) {
         navigate("/");
-        throw new Error(`HTTP error! status: ${response.status}`);
+        console.error(error);
       }
-
-      const feedback = await response.json();
-      setFeedback(feedback);
     }
 
     fetchDetail();
@@ -274,56 +275,39 @@ const FeedbackDetail = () => {
     setCommentLength(250 - document.getElementById("new-comment").value.length);
   }
 
-  function handleReplyChange(e) {
-    setNewReply(e.target.value);
+  async function patchUpvotes(id, newUpvotes, upvoted) {
+    try {
+      const res = await fetch(`http://3.135.141.179:27017/api/feedback/${id}`, {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        method: "PATCH",
+
+        body: JSON.stringify({
+          upvotes: newUpvotes,
+          upvoted: upvoted,
+        }),
+      });
+
+      setRefreshCount((prev) => prev + 1);
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   async function handleUpvote() {
     if (!upvoted) {
-      const res = await fetch(
-        `http://3.135.141.179:27017/api/feedback/${_id}`,
-        {
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          method: "PATCH",
+      const newUpvotes = upvotes + 1;
 
-          body: JSON.stringify({
-            upvotes: `${upvotes + 1}`,
-            upvoted: true,
-          }),
-        }
-      );
-
-      if (!res.ok) {
-        throw new Error(`HTTP error! status: ${res.status}`);
-      }
+      await patchUpvotes(_id, newUpvotes, true);
     }
 
     if (upvoted) {
-      const res = await fetch(
-        `http://3.135.141.179:27017/api/feedback/${_id}`,
-        {
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          method: "PATCH",
+      const newUpvotes = upvotes - 1;
 
-          body: JSON.stringify({
-            upvotes: `${upvotes - 1}`,
-            upvoted: false,
-          }),
-        }
-      );
-
-      if (!res.ok) {
-        throw new Error(`HTTP error! status: ${res.status}`);
-      }
+      await patchUpvotes(_id, newUpvotes, false);
     }
-
-    setRefreshCount((prev) => prev + 1);
   }
 
   async function postComment() {
@@ -338,23 +322,26 @@ const FeedbackDetail = () => {
       replies: [],
     });
 
-    const res = await fetch(`http://3.135.141.179:27017/api/feedback/${_id}`, {
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      method: "PATCH",
+    try {
+      const res = await fetch(
+        `http://3.135.141.179:27017/api/feedback/${_id}`,
+        {
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          method: "PATCH",
 
-      body: JSON.stringify({
-        comments: comments,
-      }),
-    });
+          body: JSON.stringify({
+            comments: comments,
+          }),
+        }
+      );
 
-    if (!res.ok) {
-      throw new Error(`HTTP error! Status: ${res.status}`);
+      setRefreshCount((prev) => prev + 1);
+    } catch (error) {
+      console.error(error);
     }
-
-    setRefreshCount((prev) => prev + 1);
   }
 
   async function postReply() {
@@ -367,57 +354,62 @@ const FeedbackDetail = () => {
         name: "Kenny Duong",
         username: "kdtheegreat",
       },
+      id: commentId,
     };
 
     // PATCH request to update reply array
-    const res = await fetch(`http://3.135.141.179:27017/api/feedback/${_id}`, {
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      method: "PATCH",
+    try {
+      const res = await fetch(
+        `http://3.135.141.179:27017/api/feedback/${_id}`,
+        {
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          method: "PATCH",
 
-      body: JSON.stringify({
-        comments: comments.map((comment) => {
-          // Find the comment with the target comment
-          if (comment.user.username === replyModel.replyingTo) {
-            // if replies array exists, add new reply to array
-            if (comment.replies) {
-              return {
-                ...comment,
-                replies: [...comment.replies, replyModel],
-              };
-            } else {
-              // if replies array doesn't exist, create replies array
-              return {
-                ...comment,
-                replies: [replyModel],
-              };
-            }
-          }
-          // if target comment not found, search through each comment's replies
-          else if (comment.replies) {
-            comment.replies.map((reply) => {
-              // if the username of the reply = target reply add reply to array
-              if (reply.user.username === replyModel.replyingTo) {
-                comment.replies.push(replyModel);
+          body: JSON.stringify({
+            comments: comments.map((comment) => {
+              // Find the comment with the target comment
+              if (comment.id === replyTargetId) {
+                // if replies array exists, add new reply to array
+                if (comment.replies) {
+                  return {
+                    ...comment,
+                    replies: [...comment.replies, replyModel],
+                  };
+                } else {
+                  // if replies array doesn't exist, create replies array
+                  return {
+                    ...comment,
+                    replies: [replyModel],
+                  };
+                }
               }
-            });
-          }
+              // if target comment not found, search through each comment's replies
+              else if (comment.replies) {
+                comment.replies.map((reply) => {
+                  // if the username of the reply = target reply add reply to array
+                  if (reply.id === replyTargetId) {
+                    comment.replies.push(replyModel);
+                  }
+                });
+              }
 
-          return comment;
-        }),
-      }),
-    });
+              return comment;
+            }),
+          }),
+        }
+      );
 
-    if (!res.ok) {
-      throw new Error(`HTTP error! Status: ${res.status}`);
+      // re-render the data and reset the states to default
+      setRefreshCount((prev) => prev + 1);
+      setNewComment("");
+      setReplyTarget("");
+      setReplyTargetId("");
+    } catch (error) {
+      console.error(error);
     }
-
-    // re-render the data and reset the states to default
-    setRefreshCount((prev) => prev + 1);
-    setNewComment("");
-    setReplyTarget("");
   }
 
   let commentElements;
@@ -435,17 +427,26 @@ const FeedbackDetail = () => {
 
       if (replies) {
         repliesElements = replies.map((reply, index) => {
-          const { content, user, replyingTo } = reply;
+          const { content, user, replyingTo, id } = reply;
 
           return (
-            <CommentContainer key={`reply-${index}`}>
+            <CommentContainer
+              key={`reply-${index}`}
+              data-testid={`reply-${index}`}
+            >
               <ProfileInfoContainer>
-                <ProfilePic src={`${user.image}`} />
+                <ProfilePic src={`src/${user.image}`} />
                 <ProfileName>
-                  <Name>{user.name}</Name>
-                  <Username>@{user.username}</Username>
+                  <Title>{user.name}</Title>
+                  <Description>@{user.username}</Description>
                 </ProfileName>
-                <ReplyButton onClick={() => setReplyTarget(user.username)}>
+                <ReplyButton
+                  onClick={() => {
+                    setReplyTarget(user.username);
+                    setReplyTargetId(id);
+                  }}
+                  data-testid={`reply-${index}`}
+                >
                   Reply
                 </ReplyButton>
               </ProfileInfoContainer>
@@ -454,7 +455,7 @@ const FeedbackDetail = () => {
               </CommentDescription>
               <ReplySection
                 style={
-                  replyTarget === user.username
+                  replyTargetId === id
                     ? { display: "flex" }
                     : { display: "none" }
                 }
@@ -465,9 +466,13 @@ const FeedbackDetail = () => {
                   maxLength={"250"}
                   cols="10"
                   rows="3"
-                  onChange={(e) => handleReplyChange(e)}
+                  onChange={(e) => setNewReply(e.target.value)}
+                  data-testid={`reply-box-${index}`}
                 />
-                <PostReplyButton onClick={postReply}>
+                <PostReplyButton
+                  onClick={postReply}
+                  data-testid={`post-reply-${index}`}
+                >
                   Post Reply
                 </PostReplyButton>
               </ReplySection>
@@ -481,21 +486,25 @@ const FeedbackDetail = () => {
         <div key={`comment-${id}`}>
           <CommentContainer>
             <ProfileInfoContainer>
-              <ProfilePic src={`${user.image}`} />
+              <ProfilePic src={`src/${user.image}`} />
               <ProfileName>
                 <Title style={{ padding: "0" }}>{user.name}</Title>
-                <Username>@{user.username}</Username>
+                <Description>@{user.username}</Description>
               </ProfileName>
-              <ReplyButton onClick={() => setReplyTarget(user.username)}>
+              <ReplyButton
+                onClick={() => {
+                  setReplyTarget(user.username);
+                  setReplyTargetId(id);
+                }}
+                data-testid={`comment-${index}`}
+              >
                 Reply
               </ReplyButton>
             </ProfileInfoContainer>
             <CommentDescription>{content}</CommentDescription>
             <ReplySection
               style={
-                replyTarget === user.username
-                  ? { display: "flex" }
-                  : { display: "none" }
+                replyTargetId === id ? { display: "flex" } : { display: "none" }
               }
             >
               <ReplyBox
@@ -504,7 +513,7 @@ const FeedbackDetail = () => {
                 maxLength={"250"}
                 cols="10"
                 rows="3"
-                onChange={(e) => handleReplyChange(e)}
+                onChange={(e) => setNewReply(e.target.value)}
               />
               <PostReplyButton onClick={postReply}>Post Reply</PostReplyButton>
             </ReplySection>
@@ -518,7 +527,7 @@ const FeedbackDetail = () => {
 
   return (
     <Container>
-      {/* Go Back/Edit Buttons */}
+      {/* Back/Edit Buttons */}
       <ButtonContainer>
         <BackButton onClick={goBack}>
           <StyledIcon src={LeftArrow} />
@@ -532,9 +541,7 @@ const FeedbackDetail = () => {
         <TextContainer>
           <div>
             <Title pb="0.5rem">{title}</Title>
-            <Subtitle style={{ padding: "0" }} pb="0.5rem">
-              {description}
-            </Subtitle>
+            <Description pb="0.5rem">{description}</Description>
             <FilterText disabled={true}>
               {category
                 ? category.charAt(0).toUpperCase() + category.slice(1)
@@ -556,7 +563,11 @@ const FeedbackDetail = () => {
           onClick={handleUpvote}
           style={upvoted ? activeUpvote : null}
         >
-          <StyledIcon src={UpArrowIcon} style={upvoted ? activeFilter : null} />
+          <StyledIcon
+            src={UpArrowIcon}
+            style={upvoted ? activeFilter : null}
+            alt="upvote button"
+          />
           {upvotes}
         </UpvoteButton>
       </FeedbackContainer>

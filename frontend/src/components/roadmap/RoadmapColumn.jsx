@@ -69,6 +69,11 @@ const RoadmapColumn = ({ currentTab }) => {
     return obj.status === currentTab.split(" ")[0].toLowerCase();
   }
 
+  const activeUpvote = {
+    backgroundColor: "var(--blue-900)",
+    color: "var(--neutral-100)",
+  };
+
   const ContentContainerElements = allFeedback
     .filter(filterByStatus)
     .map((feedback) => {
@@ -80,6 +85,7 @@ const RoadmapColumn = ({ currentTab }) => {
         upvotes,
         _id,
         id,
+        upvoted,
       } = feedback;
 
       const replies = comments.map((comment) => {
@@ -128,8 +134,11 @@ const RoadmapColumn = ({ currentTab }) => {
             {category.charAt(0).toUpperCase() + category.slice(1)}
           </FilterText>
           <ButtonContainer>
-            <UpvoteButton>
-              <img src={UpArrow} />
+            <UpvoteButton style={upvoted ? activeUpvote : null}>
+              <img
+                style={upvoted ? { filter: "brightness(1000%)" } : null}
+                src={UpArrow}
+              />
               {upvotes}
             </UpvoteButton>
             <CommentDisplay

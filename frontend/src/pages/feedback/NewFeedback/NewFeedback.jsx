@@ -2,16 +2,17 @@ import React, { useContext, useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
-import { AddButton, ContentContainer } from "../../globalStyles";
-import { Description, Title } from "../feed/Feed/Feed";
-import { Heading } from "./FeedbackDetail/FeedbackDetail";
+import { AddButton, ContentContainer } from "../../../globalStyles";
+import { Description, Title } from "../../feed/Feed/Feed";
+import { Heading } from "../FeedbackDetail/FeedbackDetail";
 
-import LeftArrow from "../../assets/shared/icon-arrow-left.svg";
-import DownArrow from "../../assets/shared/icon-arrow-down.svg";
-import UpArrow from "../../assets/shared/icon-arrow-up.svg";
-import CheckIcon from "../../assets/shared/icon-check.svg";
-import NewFeedbackIcon from "../../assets/shared/icon-new-feedback.svg";
-import { GlobalContext } from "../../App/App";
+import LeftArrow from "../../../assets/shared/icon-arrow-left.svg";
+import DownArrow from "../../../assets/shared/icon-arrow-down.svg";
+import UpArrow from "../../../assets/shared/icon-arrow-up.svg";
+import CheckIcon from "../../../assets/shared/icon-check.svg";
+import NewFeedbackIcon from "../../../assets/shared/icon-new-feedback.svg";
+import { GlobalContext } from "../../../App/App";
+import { nanoid } from "nanoid";
 
 const Container = styled.div`
   display: flex;
@@ -106,7 +107,7 @@ const ButtonContainer = styled.div`
   flex-direction: column;
   gap: 1rem;
 
-  @media screen and (min-width: 640px) {
+  @media screen and (min-width: 690px) {
     flex-direction: row-reverse;
   }
 `;
@@ -120,7 +121,7 @@ const CancelButton = styled.button`
   border: 0;
   border-radius: 0.625rem;
 
-  @media screen and (min-width: 640px) {
+  @media screen and (min-width: 690px) {
     padding: 0.75rem 1.5rem;
   }
 `;
@@ -133,10 +134,12 @@ const Divider = styled.div`
 
 const NewFeedback = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { feedbackArray, setRefreshCount } = useContext(GlobalContext);
+  const { setRefreshCount } = useContext(GlobalContext);
   const [selectedCategory, setSelectedCategory] = useState("Feature");
 
   const navigate = useNavigate();
+
+  const { id } = nanoid();
 
   const activeDropdown = {
     border: "1px solid var(--blue-900)",
@@ -154,36 +157,41 @@ const NewFeedback = () => {
     setSelectedCategory(e.target.textContent);
   }
 
-  async function handleAddBtn() {
-    const res = await fetch(`http://3.135.141.179:27017/api/feedback/`, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-      method: "POST",
+  async function postFeedback(data) {
+    try {
+      const res = await fetch(`http://3.135.141.179:27017/api/feedback/`, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "POST",
 
-      body: JSON.stringify({
-        title: document.getElementById("title").value,
-        description: document.getElementById("desc").value,
-        category: selectedCategory.toLowerCase(),
-        upvotes: 0,
-        upvoted: false,
-        status: "suggestion",
-        id: feedbackArray.length + 1,
-        comments: [],
-      }),
-    });
-
-    if (!res.ok) {
-      throw new Error(`HTTP error! status: ${res.status}`);
+        body: JSON.stringify(data),
+      });
+    } catch (error) {
+      console.error(error);
     }
+  }
 
+  async function handleAddBtn() {
+    const data = {
+      title: document.getElementById("title").value,
+      description: document.getElementById("desc").value,
+      category: selectedCategory.toLowerCase(),
+      upvotes: 0,
+      upvoted: false,
+      status: "suggestion",
+      id: id,
+      comments: [],
+    };
+
+    await postFeedback(data);
     navigate("/");
     setRefreshCount((prev) => prev + 1);
   }
 
   return (
     <Container>
-      <BackButton onClick={goBack}>
+      <BackButton data-testid="back-button" onClick={goBack}>
         <img src={LeftArrow} />
         Go Back
       </BackButton>
@@ -192,38 +200,66 @@ const NewFeedback = () => {
         <Heading>Create New Feedback</Heading>
         <Title>Feeback Title</Title>
         <Description>Add a short, descriptive headline</Description>
-        <StyledTextArea id="title" />
+        <StyledTextArea id="title" data-testid="title" />
         <Title>Category</Title>
         <Description>Choose a catgory for your feedback</Description>
         <DropDownContainer
           onClick={toggleOpen}
           style={isOpen ? activeDropdown : null}
+          data-testid="dropdown"
+          id={isOpen ? "open" : "closed"}
         >
           <SelectedCategory>{selectedCategory}</SelectedCategory>
-          <StyledArrow src={isOpen ? UpArrow : DownArrow} />
+          <StyledArrow
+            src={isOpen ? UpArrow : DownArrow}
+            id={isOpen ? "uparrow" : "downarrow"}
+            data-testid="arrow"
+          />
           {isOpen && (
             <StyledDropDown>
-              <Item onClick={(e) => handleCategoryChange(e)}>
+              <Item
+                onClick={(e) => handleCategoryChange(e)}
+                id={selectedCategory === "Feature" ? "active" : "Feature"}
+                data-testid="feature-item"
+              >
                 Feature
                 {selectedCategory === "Feature" && <img src={CheckIcon} />}
               </Item>
               <Divider />
-              <Item onClick={(e) => handleCategoryChange(e)}>
+              <Item
+                onClick={(e) => handleCategoryChange(e)}
+                id={selectedCategory === "UI" ? "active" : "UI"}
+                data-testid="ui-item"
+              >
                 UI
                 {selectedCategory === "UI" && <img src={CheckIcon} />}
               </Item>
               <Divider />
-              <Item onClick={(e) => handleCategoryChange(e)}>
+              <Item
+                onClick={(e) => handleCategoryChange(e)}
+                id={selectedCategory === "UX" ? "active" : "UX"}
+                data-testid="ux-item"
+              >
                 UX
                 {selectedCategory === "UX" && <img src={CheckIcon} />}
               </Item>
               <Divider />
-              <Item onClick={(e) => handleCategoryChange(e)}>
+              <Item
+                onClick={(e) => handleCategoryChange(e)}
+                id={
+                  selectedCategory === "Enhancement" ? "active" : "Enhancement"
+                }
+                data-testid="enhancement-item"
+              >
                 Enhancement
                 {selectedCategory === "Enhancement" && <img src={CheckIcon} />}
               </Item>
               <Divider />
-              <Item onClick={(e) => handleCategoryChange(e)}>
+              <Item
+                onClick={(e) => handleCategoryChange(e)}
+                id={selectedCategory === "Bug" ? "active" : "Bug"}
+                data-testid="bug-item"
+              >
                 Bug
                 {selectedCategory === "Bug" && <img src={CheckIcon} />}
               </Item>
@@ -234,10 +270,14 @@ const NewFeedback = () => {
         <Description>
           Include any specific comments on what should be improved, added, etc.
         </Description>
-        <StyledTextArea rows="4" id="desc" />
+        <StyledTextArea rows="4" id="desc" data-testid="desc" />
         <ButtonContainer>
-          <AddButton onClick={handleAddBtn}>Add Feedback</AddButton>
-          <CancelButton onClick={goBack}>Cancel</CancelButton>
+          <AddButton onClick={handleAddBtn} data-testid="add-button">
+            Add Feedback
+          </AddButton>
+          <CancelButton onClick={goBack} data-testid="cancel-button">
+            Cancel
+          </CancelButton>
         </ButtonContainer>
       </ContentContainer>
     </Container>

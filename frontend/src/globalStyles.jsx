@@ -71,7 +71,7 @@ export const AddButton = styled.button`
   border: 0;
   border-radius: 0.625rem;
 
-  @media screen and (min-width: 640px) {
+  @media screen and (min-width: 690px) {
     padding: 0.75rem 1.5rem;
   }
 `;

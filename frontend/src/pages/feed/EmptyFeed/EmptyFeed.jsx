@@ -12,7 +12,7 @@ const Container = styled.div`
   background-color: var(--neutral-100);
   border-radius: 10px;
 
-  @media screen and (min-width: 640px) {
+  @media screen and (min-width: 690px) {
     padding: 6.875rem;
     margin-top: 1.5rem;
   }
@@ -35,7 +35,7 @@ const Description = styled.p`
   text-align: center;
   padding-bottom: 1.5rem;
 
-  @media screen and (min-width: 640px) {
+  @media screen and (min-width: 690px) {
     max-width: 52ch;
   }
 `;

@@ -9,8 +9,8 @@ import Feed from "../pages/feed/Feed/Feed";
 import Global from "../globalStyles";
 import Layout from "../components/Layout/Layout";
 import FeedbackDetail from "../pages/feedback/FeedbackDetail/FeedbackDetail";
-import NewFeedback from "../pages/feedback/NewFeedback";
-import EditFeedback from "../pages/feedback/EditFeedback";
+import NewFeedback from "../pages/feedback/NewFeedback/NewFeedback";
+import EditFeedback from "../pages/feedback/EditFeedback/EditFeedback";
 import Roadmap from "../pages/roadmap/Roadmap";
 import NotFound from "../pages/notfound/NotFound";
 
@@ -30,60 +30,58 @@ function App() {
 
   useEffect(() => {
     async function fetchFeedbacks() {
-      const response = await fetch("http://3.135.141.179:27017/api/feedback");
+      try {
+        const response = await fetch("http://3.135.141.179:27017/api/feedback");
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+        const data = await response.json();
 
-      const data = await response.json();
-
-      setAllFeedback(
-        data.sort((a, b) => {
-          return b.upvotes - a.upvotes;
-        })
-      );
-      console.log(allFeedback);
-
-      if (filter === "All") {
-        setFeedbackArray(
+        setAllFeedback(
           data.sort((a, b) => {
             return b.upvotes - a.upvotes;
           })
         );
-      } else if (filter === "UI") {
-        setFeedbackArray(
-          data.filter((obj) => {
-            return obj.category === "ui";
-          })
-        );
-      } else if (filter === "UX") {
-        setFeedbackArray(
-          data.filter((obj) => {
-            return obj.category === "ux";
-          })
-        );
-      } else if (filter === "Enhancement") {
-        setFeedbackArray(
-          data.filter((obj) => {
-            return obj.category === "enhancement";
-          })
-        );
-      } else if (filter === "Bug") {
-        setFeedbackArray(
-          data.filter((obj) => {
-            return obj.category === "bug";
-          })
-        );
-      } else if (filter === "Feature") {
-        setFeedbackArray(
-          data.filter((obj) => {
-            return obj.category === "feature";
-          })
-        );
+
+        if (filter === "All") {
+          setFeedbackArray(
+            data.sort((a, b) => {
+              return b.upvotes - a.upvotes;
+            })
+          );
+        } else if (filter === "UI") {
+          setFeedbackArray(
+            data.filter((obj) => {
+              return obj.category === "ui";
+            })
+          );
+        } else if (filter === "UX") {
+          setFeedbackArray(
+            data.filter((obj) => {
+              return obj.category === "ux";
+            })
+          );
+        } else if (filter === "Enhancement") {
+          setFeedbackArray(
+            data.filter((obj) => {
+              return obj.category === "enhancement";
+            })
+          );
+        } else if (filter === "Bug") {
+          setFeedbackArray(
+            data.filter((obj) => {
+              return obj.category === "bug";
+            })
+          );
+        } else if (filter === "Feature") {
+          setFeedbackArray(
+            data.filter((obj) => {
+              return obj.category === "feature";
+            })
+          );
+        }
+      } catch (error) {
+        console.error(error);
       }
     }
-
     fetchFeedbacks();
   }, [refreshCount]);
 
@@ -112,7 +110,7 @@ function App() {
     }
 
     setArrays();
-  }, [feedbackArray, refreshCount]);
+  }, [feedbackArray]);
 
   return (
     <BrowserRouter>

@@ -12,7 +12,7 @@ import RoadmapStats from "../RoadmapStats/RoadmapStats";
 const Container = styled.div`
   z-index: 3;
 
-  @media screen and (min-width: 640px) and (max-width: 1023px) {
+  @media screen and (min-width: 690px) and (max-width: 1023px) {
     display: flex;
     flex-direction: column;
     gap: 2.5rem;
@@ -53,7 +53,7 @@ const StyledHeader = styled.header`
   right: 0;
   z-index: 2;
 
-  @media screen and (min-width: 640px) {
+  @media screen and (min-width: 690px) {
     background: rgba(122, 216, 251, 1), rgba(232, 77, 112, 1),
       rgba(163, 55, 246, 1), rgba(40, 167, 237, 1), rgba(251, 181, 122, 1);
     position: static;
@@ -69,7 +69,7 @@ const StyledHeader = styled.header`
 `;
 
 const HeaderContainer = styled.div`
-  @media screen and (min-width: 640px) {
+  @media screen and (min-width: 690px) {
     display: flex;
     gap: 0.6125rem;
   }
@@ -102,7 +102,7 @@ const StyledIcon = styled.img`
   height: 100%;
   cursor: pointer;
 
-  @media screen and (min-width: 640px) {
+  @media screen and (min-width: 690px) {
     display: none;
   }
 `;

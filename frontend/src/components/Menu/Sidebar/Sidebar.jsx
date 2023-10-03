@@ -20,7 +20,7 @@ const SidebarContainer = styled.div`
   margin-top: 71px;
   z-index: 3;
 
-  @media screen and (min-width: 640px) {
+  @media screen and (min-width: 690px) {
     display: none;
   }
 `;
@@ -34,7 +34,7 @@ const DarkBackground = styled.div`
   bottom: 0;
   z-index: 0;
 
-  @media screen and (min-width: 640px) {
+  @media screen and (min-width: 690px) {
     display: none;
   }
 `;

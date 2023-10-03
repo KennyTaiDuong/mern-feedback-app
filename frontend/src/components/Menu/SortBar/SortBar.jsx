@@ -26,7 +26,7 @@ const Container = styled.div`
     gap: 0.5rem;
   }
 
-  @media screen and (min-width: 640px) {
+  @media screen and (min-width: 690px) {
     position: static;
     border-radius: 0.6125rem;
     padding: 0.875rem 0.75rem;
@@ -38,7 +38,7 @@ const Container = styled.div`
 const SuggestionsContainer = styled.div`
   display: none;
 
-  @media screen and (min-width: 640px) {
+  @media screen and (min-width: 690px) {
     display: flex;
     gap: 1rem;
     align-items: center;
@@ -98,7 +98,7 @@ const StyledNavLink = styled(NavLink)`
   border: 0;
   border-radius: 0.64rem;
 
-  @media screen and (min-width: 640px) {
+  @media screen and (min-width: 690px) {
     margin-left: auto;
   }
 `;

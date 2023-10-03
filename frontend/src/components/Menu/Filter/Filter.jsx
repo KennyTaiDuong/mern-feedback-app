@@ -11,7 +11,7 @@ const FilterContainer = styled(ContentContainer)`
   gap: 0.5rem;
   width: 100%;
 
-  @media screen and (min-width: 640px) {
+  @media screen and (min-width: 690px) {
     height: 100%;
   }
 `;

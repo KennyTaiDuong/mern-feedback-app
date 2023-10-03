@@ -14,4 +14,10 @@ export default defineConfig({
       reporter: ["text", "json", "html"],
     },
   },
+  transform: {
+    "\\.(js|jsx)$": "babel-jest",
+    "^.+\\.css$": "jest-transform-css",
+    "^.+\\.scss$": "jest-transform-css",
+    "^.+\\.styled.js$": "jest-styled-components",
+  },
 });

@@ -30,9 +30,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">88.88% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>8/9</span>
+                <span class='fraction'>10/10</span>
             </div>
         
             
@@ -211,32 +211,32 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">12x</span>
-<span class="cline-any cline-yes">12x</span>
-<span class="cline-any cline-yes">12x</span>
-<span class="cline-any cline-yes">12x</span>
-<span class="cline-any cline-yes">12x</span>
-<span class="cline-any cline-yes">12x</span>
-<span class="cline-any cline-yes">12x</span>
-<span class="cline-any cline-yes">12x</span>
-<span class="cline-any cline-yes">12x</span>
-<span class="cline-any cline-yes">12x</span>
-<span class="cline-any cline-yes">12x</span>
-<span class="cline-any cline-yes">12x</span>
-<span class="cline-any cline-yes">12x</span>
-<span class="cline-any cline-yes">12x</span>
-<span class="cline-any cline-yes">12x</span>
-<span class="cline-any cline-yes">12x</span>
-<span class="cline-any cline-yes">12x</span>
-<span class="cline-any cline-yes">12x</span>
-<span class="cline-any cline-yes">12x</span>
-<span class="cline-any cline-yes">12x</span>
-<span class="cline-any cline-yes">12x</span>
-<span class="cline-any cline-yes">12x</span>
-<span class="cline-any cline-yes">12x</span>
-<span class="cline-any cline-yes">12x</span>
-<span class="cline-any cline-yes">12x</span>
-<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-yes">61x</span>
+<span class="cline-any cline-yes">61x</span>
+<span class="cline-any cline-yes">61x</span>
+<span class="cline-any cline-yes">61x</span>
+<span class="cline-any cline-yes">61x</span>
+<span class="cline-any cline-yes">61x</span>
+<span class="cline-any cline-yes">61x</span>
+<span class="cline-any cline-yes">61x</span>
+<span class="cline-any cline-yes">61x</span>
+<span class="cline-any cline-yes">61x</span>
+<span class="cline-any cline-yes">61x</span>
+<span class="cline-any cline-yes">61x</span>
+<span class="cline-any cline-yes">61x</span>
+<span class="cline-any cline-yes">61x</span>
+<span class="cline-any cline-yes">61x</span>
+<span class="cline-any cline-yes">61x</span>
+<span class="cline-any cline-yes">61x</span>
+<span class="cline-any cline-yes">61x</span>
+<span class="cline-any cline-yes">61x</span>
+<span class="cline-any cline-yes">61x</span>
+<span class="cline-any cline-yes">61x</span>
+<span class="cline-any cline-yes">61x</span>
+<span class="cline-any cline-yes">61x</span>
+<span class="cline-any cline-yes">61x</span>
+<span class="cline-any cline-yes">61x</span>
+<span class="cline-any cline-yes">61x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import React, { useContext } from "react";
@@ -253,7 +253,7 @@ const MainContainer = styled(ContentContainer)`
   justify-content: space-between;
   gap: 0.5rem;
 &nbsp;
-  @media screen and (min-width: 640px) {
+  @media screen and (min-width: 690px) {
     height: 100%;
   }
 `;
@@ -272,7 +272,7 @@ const StatContainer = styled.div`
 export const Circle = styled.div`
   width: 0.5rem;
   height: 0.5rem;
-  background-color: ${({ bgc }) =&gt; (bgc ? <span class="branch-0 cbranch-no" title="branch not covered" >bgc : null)}</span>;
+  background-color: ${({ bgc }) =&gt; (bgc ? bgc : null)};
   border-radius: 50%;
 `;
 &nbsp;
@@ -308,17 +308,17 @@ const RoadmapStats = () =&gt; {
         &lt;StyledNavLink to={"/roadmap"}&gt;View&lt;/StyledNavLink&gt;
       &lt;/Container&gt;
       &lt;StatContainer&gt;
-        &lt;Circle bgc="var(--orange-400)" /&gt;
+        &lt;Circle bgc="var(--orange-400)" data-testid="planned-circle" /&gt;
         &lt;StatusText&gt;Planned&lt;/StatusText&gt;
         &lt;CounterText&gt;{plannedArray ? plannedArray.length : 0}&lt;/CounterText&gt;
       &lt;/StatContainer&gt;
       &lt;StatContainer&gt;
-        &lt;Circle bgc="var(--magenta-400)" /&gt;
+        &lt;Circle bgc="var(--magenta-400)" data-testid="progress-circle" /&gt;
         &lt;StatusText&gt;In-Progress&lt;/StatusText&gt;
         &lt;CounterText&gt;{progressArray ? progressArray.length : 0}&lt;/CounterText&gt;
       &lt;/StatContainer&gt;
       &lt;StatContainer&gt;
-        &lt;Circle bgc="var(--blue-700)" /&gt;
+        &lt;Circle bgc="var(--blue-700)" data-testid="live-circle" /&gt;
         &lt;StatusText&gt;Live&lt;/StatusText&gt;
         &lt;CounterText&gt;{liveArray ? liveArray.length : 0}&lt;/CounterText&gt;
       &lt;/StatContainer&gt;
@@ -334,7 +334,7 @@ export default RoadmapStats;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2023-09-25T20:40:30.922Z
+                at 2023-10-03T04:15:18.201Z
             </div>
         <script src="../../../../prettify.js"></script>
         <script>

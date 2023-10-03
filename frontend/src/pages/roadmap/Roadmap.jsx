@@ -155,18 +155,26 @@ const Roadmap = () => {
         <StatusTab
           onClick={(e) => handleTabChange(e)}
           style={currentTab.split(" ")[0] == "Planned" ? activeTab : null}
+          id={currentTab.split(" ")[0] == "Planned" ? "active" : "planned"}
+          data-testid="nav-item-1"
         >
           Planned ({plannedArray.length})
         </StatusTab>
         <StatusTab
           onClick={(e) => handleTabChange(e)}
           style={currentTab.split(" ")[0] == "In-Progress" ? activeTab : null}
+          id={
+            currentTab.split(" ")[0] == "In-Progress" ? "active" : "in-progress"
+          }
+          data-testid="nav-item-2"
         >
           In-Progress ({progressArray.length})
         </StatusTab>
         <StatusTab
           onClick={(e) => handleTabChange(e)}
           style={currentTab.split(" ")[0] == "Live" ? activeTab : null}
+          id={currentTab.split(" ")[0] == "Live" ? "active" : "live"}
+          data-testid="nav-item-3"
         >
           Live ({liveArray.length})
         </StatusTab>

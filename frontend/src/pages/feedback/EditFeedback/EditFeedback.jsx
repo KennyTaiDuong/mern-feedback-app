@@ -2,16 +2,16 @@ import React, { useState, useEffect, useContext } from "react";
 import styled from "styled-components";
 import { useNavigate, useParams } from "react-router-dom";
 
-import LeftArrow from "../../assets/shared/icon-arrow-left.svg";
-import UpArrow from "../../assets/shared/icon-arrow-up.svg";
-import DownArrow from "../../assets/shared/icon-arrow-down.svg";
-import EditLogo from "../../assets/shared/icon-edit-feedback.svg";
-import CheckIcon from "../../assets/shared/icon-check.svg";
+import LeftArrow from "../../../assets/shared/icon-arrow-left.svg";
+import UpArrow from "../../../assets/shared/icon-arrow-up.svg";
+import DownArrow from "../../../assets/shared/icon-arrow-down.svg";
+import EditLogo from "../../../assets/shared/icon-edit-feedback.svg";
+import CheckIcon from "../../../assets/shared/icon-check.svg";
 
-import { AddButton, ContentContainer } from "../../globalStyles";
-import { Heading } from "./FeedbackDetail/FeedbackDetail";
-import { Description, Title } from "../feed/Feed/Feed";
-import { GlobalContext } from "../../App/App";
+import { AddButton, ContentContainer } from "../../../globalStyles";
+import { Heading } from "../FeedbackDetail/FeedbackDetail";
+import { Description, Title } from "../../feed/Feed/Feed";
+import { GlobalContext } from "../../../App/App";
 
 const Container = styled.div`
   display: flex;
@@ -91,7 +91,7 @@ const StyledDropDown = styled.ul`
   top: 5rem;
   border-radius: 0.625rem;
   margin-top: -1rem;
-  box-shadow: 0px 10px 40px -7px rgba(55, 63, 104, 0.35);
+  box-shadow: 0px 10px 30px -7px rgba(55, 63, 104, 0.15);
   z-index: 2;
 `;
 
@@ -112,7 +112,7 @@ const ButtonContainer = styled.div`
   flex-direction: column;
   gap: 1rem;
 
-  @media screen and (min-width: 640px) {
+  @media screen and (min-width: 690px) {
     flex-direction: row-reverse;
   }
 `;
@@ -128,7 +128,7 @@ const CancelButton = styled(AddButton)`
 const DeleteButton = styled(AddButton)`
   background-color: var(--red-400);
 
-  @media screen and (min-width: 640px) {
+  @media screen and (min-width: 690px) {
     margin-right: auto;
   }
 `;
@@ -144,6 +144,8 @@ const EditFeedback = () => {
   const [newFeedback, setNewFeedback] = useState({});
   const [categoryOpen, setCategoryOpen] = useState(false);
   const [statusOpen, setStatusOpen] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedStatus, setSelectedStatus] = useState("");
   const { setRefreshCount } = useContext(GlobalContext);
   const { id } = useParams();
   const navigate = useNavigate();
@@ -154,26 +156,29 @@ const EditFeedback = () => {
 
   useEffect(() => {
     async function fetchDetail() {
-      const response = await fetch(
-        `http://3.135.141.179:27017/api/feedback/${id}`
-      );
+      try {
+        const response = await fetch(
+          `http://3.135.141.179:27017/api/feedback/${id}`
+        );
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        const feedback = await response.json();
+        setFeedback(feedback);
+        setNewFeedback(feedback);
+        setSelectedCategory(
+          feedback.category.charAt(0).toUpperCase() + feedback.category.slice(1)
+        );
+        setSelectedStatus(
+          feedback.status.charAt(0).toUpperCase() + feedback.status.slice(1)
+        );
+      } catch (error) {
+        console.error(error);
       }
-
-      const feedback = await response.json();
-      setFeedback(feedback);
-      setNewFeedback(feedback);
     }
 
     fetchDetail();
   }, []);
 
   const { title, category, description, status, _id } = feedback;
-
-  const [selectedCategory, setSelectedCategory] = useState(category);
-  const [selectedStatus, setSelectedStatus] = useState(status);
 
   function goBack() {
     navigate(`/${id}`);
@@ -217,35 +222,39 @@ const EditFeedback = () => {
 
   // patch request to update database
   async function updateFeedback() {
-    const res = await fetch(`http://3.135.141.179:27017/api/feedback/${id}`, {
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      method: "PATCH",
+    try {
+      const res = await fetch(`http://3.135.141.179:27017/api/feedback/${id}`, {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        method: "PATCH",
 
-      body: JSON.stringify(newFeedback),
-    });
+        body: JSON.stringify(newFeedback),
+      });
 
-    if (!res.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      setRefreshCount((prev) => prev + 1);
+      navigate(`/${id}`);
+    } catch (error) {
+      console.error(error);
     }
-
-    setRefreshCount((prev) => prev + 1);
-    navigate(`/${id}`);
   }
 
+  // delete feedback
   async function deleteFeedback() {
-    const res = await fetch(`http://3.135.141.179:27017/api/feedback/${_id}`, {
-      method: "DELETE",
-    });
+    try {
+      const res = await fetch(
+        `http://3.135.141.179:27017/api/feedback/${_id}`,
+        {
+          method: "DELETE",
+        }
+      );
 
-    if (!res.ok) {
-      throw new Error(`HTTP error! status: ${res.status}`);
+      setRefreshCount((prev) => prev + 1);
+      navigate("/");
+    } catch (error) {
+      console.error(error);
     }
-
-    setRefreshCount((prev) => prev + 1);
-    navigate("/");
   }
 
   // Functions for dropdown menus
@@ -273,8 +282,9 @@ const EditFeedback = () => {
         <img src={LeftArrow} />
         Go Back
       </BackButton>
+
       <ContentContainer onClick={toggleDropdown}>
-        <StyledLogo src={EditLogo} />
+        <StyledLogo src={EditLogo} alt="edit logo" />
         <Heading>Editing '{title}'</Heading>
         <Title>Feedback Title</Title>
         <Description>Add a short, descriptive headline</Description>
@@ -284,48 +294,69 @@ const EditFeedback = () => {
           onChange={(e) => {
             updateFeedbackTitle(e);
           }}
+          data-testid="title-textarea"
         />
         <Title>Category</Title>
         <Description>Choose a category for your feedback</Description>
         <DropDownContainer
           onClick={toggleCategory}
           style={categoryOpen ? activeDropdown : null}
+          data-testid="category-dropdown"
         >
           <SelectedCategory>
-            {selectedCategory
-              ? selectedCategory
-              : category
-              ? category.charAt(0).toUpperCase() + category.slice(1)
-              : null}
+            {selectedCategory}
             <StyledArrow src={categoryOpen ? UpArrow : DownArrow} />
           </SelectedCategory>
           {categoryOpen && (
             <StyledDropDown>
-              <Item onClick={(e) => updateFeedbackCategory(e)}>
+              <Item
+                onClick={(e) => updateFeedbackCategory(e)}
+                data-testid="category-1"
+              >
                 Feature
-                {selectedCategory === "Feature" && <img src={CheckIcon} />}
-              </Item>
-              <Divider />
-              <Item onClick={(e) => updateFeedbackCategory(e)}>
-                UI
-                {(selectedCategory === "UI" || category === "UI") && (
-                  <img src={CheckIcon} />
+                {selectedCategory === "Feature" && (
+                  <img src={CheckIcon} alt="check icon" id="feature" />
                 )}
               </Item>
               <Divider />
-              <Item onClick={(e) => updateFeedbackCategory(e)}>
+              <Item
+                onClick={(e) => updateFeedbackCategory(e)}
+                data-testid="category-2"
+              >
+                UI
+                {selectedCategory === "UI" && (
+                  <img src={CheckIcon} alt="check icon" id="ui" />
+                )}
+              </Item>
+              <Divider />
+              <Item
+                onClick={(e) => updateFeedbackCategory(e)}
+                data-testid="category-3"
+              >
                 UX
-                {selectedCategory === "UX" && <img src={CheckIcon} />}
+                {selectedCategory === "UX" && (
+                  <img src={CheckIcon} alt="check icon" id="ux" />
+                )}
               </Item>
               <Divider />
-              <Item onClick={(e) => updateFeedbackCategory(e)}>
+              <Item
+                onClick={(e) => updateFeedbackCategory(e)}
+                data-testid="category-4"
+              >
                 Enhancement
-                {selectedCategory === "Enhancement" && <img src={CheckIcon} />}
+                {selectedCategory === "Enhancement" && (
+                  <img src={CheckIcon} alt="check icon" id="enhancement" />
+                )}
               </Item>
               <Divider />
-              <Item onClick={(e) => updateFeedbackCategory(e)}>
+              <Item
+                onClick={(e) => updateFeedbackCategory(e)}
+                data-testid="category-5"
+              >
                 Bug
-                {selectedCategory === "Bug" && <img src={CheckIcon} />}
+                {selectedCategory === "Bug" && (
+                  <img src={CheckIcon} alt="check icon" id="bug" />
+                )}
               </Item>
             </StyledDropDown>
           )}
@@ -335,37 +366,52 @@ const EditFeedback = () => {
         <DropDownContainer
           onClick={toggleStatus}
           style={statusOpen ? activeDropdown : null}
+          data-testid="status-dropdown"
         >
           <SelectedCategory>
-            {selectedStatus
-              ? selectedStatus
-              : status === "in-progress"
-              ? "In-Progress"
-              : status
-              ? status.charAt(0).toUpperCase() + status.slice(1)
-              : status}
+            {selectedStatus}
             <StyledArrow src={statusOpen ? UpArrow : DownArrow} />
           </SelectedCategory>
           {statusOpen && (
             <StyledDropDown>
-              <Item onClick={(e) => updateFeedbackStatus(e)}>
+              <Item
+                onClick={(e) => updateFeedbackStatus(e)}
+                data-testid="status-1"
+              >
                 Suggestion
-                {selectedStatus === "Suggestion" && <img src={CheckIcon} />}
+                {selectedStatus === "Suggestion" && (
+                  <img src={CheckIcon} alt="check icon" id="suggestion" />
+                )}
               </Item>
               <Divider />
-              <Item onClick={(e) => updateFeedbackStatus(e)}>
+              <Item
+                onClick={(e) => updateFeedbackStatus(e)}
+                data-testid="status-2"
+              >
                 Planned
-                {selectedStatus === "Planned" && <img src={CheckIcon} />}
+                {selectedStatus === "Planned" && (
+                  <img src={CheckIcon} alt="check icon" id="planned" />
+                )}
               </Item>
               <Divider />
-              <Item onClick={(e) => updateFeedbackStatus(e)}>
+              <Item
+                onClick={(e) => updateFeedbackStatus(e)}
+                data-testid="status-3"
+              >
                 In-Progress
-                {selectedStatus === "In-Progress" && <img src={CheckIcon} />}
+                {selectedStatus === "In-Progress" && (
+                  <img src={CheckIcon} alt="check icon" id="progress" />
+                )}
               </Item>
               <Divider />
-              <Item onClick={(e) => updateFeedbackStatus(e)}>
+              <Item
+                onClick={(e) => updateFeedbackStatus(e)}
+                data-testid="status-4"
+              >
                 Live
-                {selectedStatus === "Live" && <img src={CheckIcon} />}
+                {selectedStatus === "Live" && (
+                  <img src={CheckIcon} alt="check icon" id="live" />
+                )}
               </Item>
             </StyledDropDown>
           )}
@@ -380,11 +426,14 @@ const EditFeedback = () => {
           onChange={(e) => {
             updateFeedbackDetail(e);
           }}
+          data-testid="desc-textarea"
         />
         <ButtonContainer>
           <SaveButton onClick={updateFeedback}>Save Changes</SaveButton>
           <CancelButton onClick={goBack}>Cancel</CancelButton>
-          <DeleteButton onClick={deleteFeedback}>Delete</DeleteButton>
+          <DeleteButton onClick={deleteFeedback} data-testid="delete-button">
+            Delete
+          </DeleteButton>
         </ButtonContainer>
       </ContentContainer>
     </Container>

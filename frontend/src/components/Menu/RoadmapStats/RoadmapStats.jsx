@@ -12,7 +12,7 @@ const MainContainer = styled(ContentContainer)`
   justify-content: space-between;
   gap: 0.5rem;
 
-  @media screen and (min-width: 640px) {
+  @media screen and (min-width: 690px) {
     height: 100%;
   }
 `;
@@ -67,17 +67,17 @@ const RoadmapStats = () => {
         <StyledNavLink to={"/roadmap"}>View</StyledNavLink>
       </Container>
       <StatContainer>
-        <Circle bgc="var(--orange-400)" />
+        <Circle bgc="var(--orange-400)" data-testid="planned-circle" />
         <StatusText>Planned</StatusText>
         <CounterText>{plannedArray ? plannedArray.length : 0}</CounterText>
       </StatContainer>
       <StatContainer>
-        <Circle bgc="var(--magenta-400)" />
+        <Circle bgc="var(--magenta-400)" data-testid="progress-circle" />
         <StatusText>In-Progress</StatusText>
         <CounterText>{progressArray ? progressArray.length : 0}</CounterText>
       </StatContainer>
       <StatContainer>
-        <Circle bgc="var(--blue-700)" />
+        <Circle bgc="var(--blue-700)" data-testid="live-circle" />
         <StatusText>Live</StatusText>
         <CounterText>{liveArray ? liveArray.length : 0}</CounterText>
       </StatContainer>

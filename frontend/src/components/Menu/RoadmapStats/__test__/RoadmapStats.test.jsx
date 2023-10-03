@@ -21,17 +21,19 @@ const MockedRoadmapStats = () => {
 describe("RoadmapStats Component", () => {
   it("should render Roadmap", () => {
     render(<MockedRoadmapStats />);
+
+    const plannedCircle = screen.getByTestId("planned-circle");
+    const progressCircle = screen.getByTestId("progress-circle");
+    const liveCircle = screen.getByTestId("live-circle");
+
+    expect(plannedCircle).toBeInTheDocument();
+    expect(progressCircle).toBeInTheDocument();
+    expect(liveCircle).toBeInTheDocument();
   });
-});
 
-const MockCircle = ({ bgc }) => {
-  return <Circle bgc={bgc} data-testid="circle" />;
-};
-
-describe("Circle Component", () => {
-  it("should render small circle", () => {
-    render(<MockCircle bgc="--magenta-400" />);
-    const circleElement = screen.getByTestId("circle");
-    expect(circleElement).toBeInTheDocument();
+  it("should render null background when no bgc prop passed", async () => {
+    render(<Circle data-testid="circle" />);
+    const circle = screen.getByTestId("circle");
+    expect(circle).toHaveStyle({ backgroundColor: null });
   });
 });

@@ -21,7 +21,7 @@ const Container = styled.div`
   margin-top: 103px;
   padding: 1.5rem;
 
-  @media screen and (min-width: 640px) and (max-width: 1024px) {
+  @media screen and (min-width: 690px) and (max-width: 1024px) {
     margin-top: 0;
     padding: 3.5rem 2.5rem;
   }
@@ -46,14 +46,14 @@ const FeedContainer = styled.div`
 `;
 
 const FeedbackContainer = styled(ContentContainer)`
-  @media screen and (min-width: 640px) {
+  @media screen and (min-width: 690px) {
     display: flex;
     gap: 2.5rem;
   }
 `;
 
 const StyledNavLink = styled(NavLink)`
-  @media screen and (min-width: 640px) {
+  @media screen and (min-width: 690px) {
     order: 1;
     width: 100%;
     display: flex;
@@ -66,7 +66,7 @@ export const Title = styled.h3`
   color: var(--blue-500);
   padding-bottom: ${({ pb }) => (pb ? pb : null)};
 
-  @media screen and (min-width: 640px) {
+  @media screen and (min-width: 690px) {
     font-size: 1.125rem;
   }
 `;
@@ -76,7 +76,7 @@ export const Description = styled.p`
   color: var(--blue-300);
   padding-bottom: ${({ pb }) => (pb ? pb : null)};
 
-  @media screen and (min-width: 640px) {
+  @media screen and (min-width: 690px) {
     font-size: 1rem;
   }
 `;
@@ -97,7 +97,7 @@ export const ButtonContainer = styled.div`
   display: flex;
   padding-top: 1rem;
 
-  @media screen and (min-width: 640px) {
+  @media screen and (min-width: 690px) {
   }
 `;
 
@@ -113,7 +113,7 @@ export const UpvoteButton = styled(FilterButton)`
     background-color: rgba(207, 215, 255, 1);
   }
 
-  @media screen and (min-width: 640px) {
+  @media screen and (min-width: 690px) {
     margin-top: 0;
     position: static;
     align-self: flex-start;
@@ -142,7 +142,7 @@ const Feed = () => {
     return (
       <Container>
         <Header />
-        <Main>
+        <Main data-testid="empty-container">
           <SortBar />
           <EmptyFeed />
         </Main>
@@ -150,7 +150,7 @@ const Feed = () => {
     );
   }
 
-  const feedbackCardElements = feedbackArray.map((feedback) => {
+  const feedbackCardElements = feedbackArray.map((feedback, index) => {
     const {
       title,
       category,
@@ -181,10 +181,10 @@ const Feed = () => {
       filter: "brightness(1000%)",
     };
 
-    async function handleUpvote() {
-      if (!upvoted) {
+    async function patchUpvotes(id, newUpvotes, upvoted) {
+      try {
         const res = await fetch(
-          `http://3.135.141.179:27017/api/feedback/${_id}`,
+          `http://3.135.141.179:27017/api/feedback/${id}`,
           {
             headers: {
               Accept: "application/json",
@@ -193,55 +193,49 @@ const Feed = () => {
             method: "PATCH",
 
             body: JSON.stringify({
-              upvotes: `${upvotes + 1}`,
-              upvoted: true,
+              upvotes: newUpvotes,
+              upvoted: upvoted,
             }),
           }
         );
 
-        if (!res.ok) {
-          throw new Error(`HTTP error! status: ${res.status}`);
-        }
+        setRefreshCount((prev) => prev + 1);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    async function handleUpvote() {
+      if (!upvoted) {
+        const newUpvotes = upvotes + 1;
+
+        await patchUpvotes(_id, newUpvotes, true);
       }
 
       if (upvoted) {
-        const res = await fetch(
-          `http://3.135.141.179:27017/api/feedback/${_id}`,
-          {
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json",
-            },
-            method: "PATCH",
-
-            body: JSON.stringify({
-              upvotes: `${upvotes - 1}`,
-              upvoted: false,
-            }),
-          }
-        );
-
-        if (!res.ok) {
-          throw new Error(`HTTP error! status: ${res.status}`);
-        }
+        const newUpvotes = upvotes - 1;
+        await patchUpvotes(_id, newUpvotes, false);
       }
-
-      setRefreshCount((prev) => prev + 1);
     }
 
     return (
       <FeedbackContainer key={_id}>
         <StyledNavLink to={`/${_id}`} style={{ textDecoration: "none" }}>
           <div>
-            <Title pb={"0.5rem"}>{title}</Title>
+            <Title pb={"0.5rem"} data-testid={`title-${index}`}>
+              {title}
+            </Title>
             <Description pb={"0.5rem"}>{description}</Description>
             <FilterText disabled={true}>
-              {category.charAt(0).toUpperCase() + category.slice(1)}
+              {category.length === 2
+                ? category.toUpperCase()
+                : category.charAt(0).toUpperCase() + category.slice(1)}
             </FilterText>
           </div>
           <ButtonContainer>
             <CommentDisplay
               style={commentsCount === 0 ? { opacity: "0.5" } : null}
+              data-testid={`comment-count-${index}`}
             >
               <img src={CommentIcon} />
               {commentsCount}
@@ -251,6 +245,7 @@ const Feed = () => {
         <UpvoteButton
           onClick={handleUpvote}
           style={upvoted ? activeUpvote : null}
+          data-testid={`upvote-btn-${index}`}
         >
           <img src={UpArrowIcon} style={upvoted ? activeFilter : null} />
           {upvotes}
