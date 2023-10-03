@@ -20,4 +20,9 @@ export default defineConfig({
     "^.+\\.scss$": "jest-transform-css",
     "^.+\\.styled.js$": "jest-styled-components",
   },
+  server: {
+    host: true,
+    strictPort: true,
+    port: 8080,
+  },
 });
