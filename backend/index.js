@@ -13,7 +13,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use((req, res, next) => {
-  console.log(req.path, req.method);
+  console.log(req.path, res, req.method);
   next();
 });
 
